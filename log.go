@@ -23,8 +23,14 @@ func Echo(ws *websocket.Conn) {
 			connected.PushBack(*ws)
 		}
 		Push(`{"Timestamp":` + strconv.FormatInt(time.Now().Unix(), 10) + `,"Codeline":"null","Level":4,"Info":"new clent connected","Detail":null}`)
-		ws.Read(nil)
-		fmt.Println("code here")
+		var reply string
+
+		if err := websocket.Message.Receive(ws, &reply); err != nil {
+			fmt.Println(err.Error())
+			break
+		}
+
+		fmt.Println(reply)
 		times++
 	}
 }
